@@ -19,7 +19,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <top.itmp.DocumentsToolBar
+    <top.itmp.documentsui.DocumentsToolBar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
@@ -34,7 +34,7 @@
             android:layout_marginStart="4dp"
             android:overlapAnchor="true" />
 
-    </top.itmp.DocumentsToolBar>
+    </top.itmp.documentsui.DocumentsToolBar>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -58,7 +58,7 @@
             android:background="@color/material_grey_50"
             android:elevation="8dp">
 
-            <top.itmp.DirectoryContainerView
+            <top.itmp.documentsui.DirectoryContainerView
                 android:id="@+id/container_directory"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"

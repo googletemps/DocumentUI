@@ -2,16 +2,15 @@
         package="top.itmp.documentsui">
 
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
-    <uses-permission android:name="android.permission.REMOVE_TASKS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:name=".DocumentsApplication"
+        android:name="top.itmp.documentsui.DocumentsApplication"
         android:label="@string/app_label"
         android:supportsRtl="true">
 
         <activity
-            android:name=".DocumentsActivity"
+            android:name="top.itmp.documentsui.DocumentsActivity"
             android:theme="@style/DocumentsTheme"
             android:icon="@drawable/ic_doc_text">
             <intent-filter>
@@ -50,11 +49,11 @@
         </activity>
 
         <provider
-            android:name=".RecentsProvider"
-            android:authorities="com.android.documentsui.recents"
+            android:name="top.itmp.documentsui.RecentsProvider"
+            android:authorities="top.itmp.recents"
             android:exported="false"/>
 
-        <receiver android:name=".PackageReceiver">
+        <receiver android:name="top.itmp.documentsui.PackageReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_FULLY_REMOVED" />
                 <action android:name="android.intent.action.PACKAGE_DATA_CLEARED" />
@@ -63,7 +62,7 @@
         </receiver>
 
         <service
-            android:name=".CopyService"
+            android:name="top.itmp.documentsui.CopyService"
             android:exported="false">
         </service>
     </application>
