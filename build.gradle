@@ -30,7 +30,7 @@ android {
 	sourceSets {
         main {
             dirs.each { dir ->
-                java.srcDirs "src/${dir}/java"
+                java.srcDirs "src/${dir}/src"
                 res.srcDirs "src/${dir}/res"
             }
         }
