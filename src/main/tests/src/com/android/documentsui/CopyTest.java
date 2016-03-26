@@ -33,9 +33,10 @@ import android.test.ServiceTestCase;
 import android.test.mock.MockContentResolver;
 import android.util.Log;
 
-import com.android.documentsui.model.DocumentInfo;
-import com.android.documentsui.model.DocumentStack;
-import com.android.documentsui.model.RootInfo;
+import top.itmp.CopyService;
+import top.itmp.model.DocumentInfo;
+import top.itmp.model.DocumentStack;
+import top.itmp.model.RootInfo;
 import com.google.common.collect.Lists;
 
 import libcore.io.IoUtils;

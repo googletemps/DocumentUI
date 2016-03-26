@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 
-<com.android.documentsui.DirectoryView xmlns:android="http://schemas.android.com/apk/res/android"
+<top.itmp.DirectoryView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/material_grey_50">
@@ -48,4 +48,4 @@
         android:drawSelectorOnTop="true"
         android:visibility="gone" />
 
-</com.android.documentsui.DirectoryView>
+</top.itmp.DirectoryView>

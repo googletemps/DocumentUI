@@ -20,10 +20,12 @@ import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.android.documentsui.BaseActivity.State;
-import com.android.documentsui.model.RootInfo;
+import top.itmp.model.RootInfo;
 import com.google.android.collect.Lists;
 
 import java.util.List;
+
+import top.itmp.RootsCache;
 
 @SmallTest
 public class RootsCacheTest extends AndroidTestCase {
