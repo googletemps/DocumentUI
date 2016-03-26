@@ -16,13 +16,13 @@
 
 package top.itmp;
 
-import static com.android.documentsui.BaseActivity.State.ACTION_BROWSE;
-import static com.android.documentsui.BaseActivity.State.ACTION_CREATE;
-import static com.android.documentsui.BaseActivity.State.ACTION_GET_CONTENT;
-import static com.android.documentsui.BaseActivity.State.ACTION_MANAGE;
-import static com.android.documentsui.BaseActivity.State.ACTION_OPEN;
-import static com.android.documentsui.BaseActivity.State.ACTION_OPEN_COPY_DESTINATION;
-import static com.android.documentsui.BaseActivity.State.ACTION_OPEN_TREE;
+import static top.itmp.BaseActivity.State.ACTION_BROWSE;
+import static top.itmp.BaseActivity.State.ACTION_CREATE;
+import static top.itmp.BaseActivity.State.ACTION_GET_CONTENT;
+import static top.itmp.BaseActivity.State.ACTION_MANAGE;
+import static top.itmp.BaseActivity.State.ACTION_OPEN;
+import static top.itmp.BaseActivity.State.ACTION_OPEN_COPY_DESTINATION;
+import static top.itmp.BaseActivity.State.ACTION_OPEN_TREE;
 import static top.itmp.DirectoryFragment.ANIM_DOWN;
 import static top.itmp.DirectoryFragment.ANIM_NONE;
 import static top.itmp.DirectoryFragment.ANIM_UP;
@@ -51,6 +51,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.DocumentsContract;
 import android.provider.DocumentsContract.Root;
+import android.support.annotation.FractionRes;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
@@ -67,8 +68,9 @@ import android.widget.Toolbar;
 import top.itmp.RecentsProvider.RecentColumns;
 import top.itmp.RecentsProvider.ResumeColumns;
 
-import com.android.documentsui.BaseActivity;
+import top.itmp.BaseActivity;
 
+import top.itmp.documentsui.R;
 import top.itmp.model.DocumentInfo;
 import top.itmp.model.DocumentStack;
 import top.itmp.model.DurableUtils;
@@ -225,9 +227,9 @@ public class DocumentsActivity extends BaseActivity {
             state.action = ACTION_GET_CONTENT;
         } else if (Intent.ACTION_OPEN_DOCUMENT_TREE.equals(action)) {
             state.action = ACTION_OPEN_TREE;
-        } else if (DocumentsContract.ACTION_MANAGE_ROOT.equals(action)) {
+        } else if ("android.provider.action.MANAGE_ROOT".equals(action)) {
             state.action = ACTION_MANAGE;
-        } else if (DocumentsContract.ACTION_BROWSE_DOCUMENT_ROOT.equals(action)) {
+        } else if ("android.provider.action.BROWSE_DOCUMENT_ROOT".equals(action)) {
             state.action = ACTION_BROWSE;
         } else if (DocumentsIntent.ACTION_OPEN_COPY_DESTINATION.equals(action)) {
             state.action = ACTION_OPEN_COPY_DESTINATION;
@@ -248,7 +250,7 @@ public class DocumentsActivity extends BaseActivity {
         }
 
         state.localOnly = intent.getBooleanExtra(Intent.EXTRA_LOCAL_ONLY, false);
-        state.forceAdvanced = intent.getBooleanExtra(DocumentsContract.EXTRA_SHOW_ADVANCED, false);
+        state.forceAdvanced = intent.getBooleanExtra("android.content.extra.SHOW_ADVANCED", false);
         state.showAdvanced = state.forceAdvanced
                 | LocalPreferences.getDisplayAdvancedDevices(this);
 
@@ -501,7 +503,7 @@ public class DocumentsActivity extends BaseActivity {
         fileSize.setVisible(fileSizeVisible);
 
         settings.setVisible((mState.action == ACTION_MANAGE || mState.action == ACTION_BROWSE)
-                && (root.flags & Root.FLAG_HAS_SETTINGS) != 0);
+                && (root.flags & 1 << 18) != 0);
 
         return true;
     }
@@ -623,7 +625,7 @@ public class DocumentsActivity extends BaseActivity {
         } else if (mState.action == ACTION_MANAGE) {
             // First try managing the document; we expect manager to filter
             // based on authority, so we don't grant.
-            final Intent manage = new Intent(DocumentsContract.ACTION_MANAGE_DOCUMENT);
+            final Intent manage = new Intent("android.provider.action.MANAGE_DOCUMENT");
             manage.setData(doc.derivedUri);
 
             try {
@@ -811,11 +813,11 @@ public class DocumentsActivity extends BaseActivity {
                 client = DocumentsApplication.acquireUnstableProviderOrThrow(
                         resolver, cwd.derivedUri.getAuthority());
                 childUri = DocumentsContract.createDocument(
-                        client, cwd.derivedUri, mMimeType, mDisplayName);
+                        resolver, cwd.derivedUri, mMimeType, mDisplayName);
             } catch (Exception e) {
                 Log.w(TAG, "Failed to create document", e);
             } finally {
-                ContentProviderClient.releaseQuietly(client);
+//                ContentProviderClient.releaseQuietly(client);
             }
 
             if (childUri != null) {

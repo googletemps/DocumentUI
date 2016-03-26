@@ -26,7 +26,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.android.documentsui.BaseActivity;
+import top.itmp.BaseActivity;
+import top.itmp.documentsui.R;
 import top.itmp.model.DocumentInfo;
 
 /**

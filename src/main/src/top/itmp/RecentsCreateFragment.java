@@ -45,9 +45,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.documentsui.BaseActivity;
-import com.android.documentsui.BaseActivity.State;
+import top.itmp.BaseActivity;
+import top.itmp.BaseActivity.State;
 
+import top.itmp.documentsui.R;
 import top.itmp.model.DocumentStack;
 import top.itmp.model.DurableUtils;
 import top.itmp.model.RootInfo;

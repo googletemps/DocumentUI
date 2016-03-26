@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Html;
 
+import top.itmp.documentsui.R;
 import top.itmp.model.DocumentInfo;
 import top.itmp.model.DocumentStack;
 

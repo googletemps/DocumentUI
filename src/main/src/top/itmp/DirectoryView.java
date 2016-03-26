@@ -20,6 +20,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
+import top.itmp.documentsui.R;
+
 public class DirectoryView extends FrameLayout {
     private float mPosition = 0f;
 

@@ -17,7 +17,7 @@
 package top.itmp;
 
 import static top.itmp.DocumentsActivity.TAG;
-import static com.android.documentsui.BaseActivity.State.SORT_ORDER_LAST_MODIFIED;
+import static top.itmp.BaseActivity.State.SORT_ORDER_LAST_MODIFIED;
 
 import android.app.ActivityManager;
 import android.content.AsyncTaskLoader;
@@ -34,8 +34,8 @@ import android.provider.DocumentsContract.Root;
 import android.text.format.DateUtils;
 import android.util.Log;
 
-import com.android.documentsui.BaseActivity.State;
-import com.android.documentsui.DirectoryResult;
+import top.itmp.BaseActivity.State;
+import top.itmp.DirectoryResult;
 import top.itmp.model.RootInfo;
 import com.android.internal.annotations.GuardedBy;
 import com.google.android.collect.Maps;
@@ -138,7 +138,7 @@ public class RecentLoader extends AsyncTaskLoader<DirectoryResult> {
             } catch (Exception e) {
                 Log.w(TAG, "Failed to load " + authority + ", " + rootId, e);
             } finally {
-                ContentProviderClient.releaseQuietly(client);
+               // ContentProviderClient.releaseQuietly(client);
             }
 
             set(mWithRoot);

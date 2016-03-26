@@ -46,6 +46,8 @@ public class DocumentInfo implements Durable, Parcelable {
     private static final int VERSION_INIT = 1;
     private static final int VERSION_SPLIT_URI = 2;
 
+    public static final int FLAG_DIR_HIDE_GRID_TITLES = 1 << 16; // just instead of Document.FLAG_DIR_HIDE_GRID_TITLES
+
     private static final Collator sCollator;
 
     static {
@@ -200,7 +202,8 @@ public class DocumentInfo implements Durable, Parcelable {
             throw asFileNotFoundException(t);
         } finally {
             IoUtils.closeQuietly(cursor);
-            ContentProviderClient.releaseQuietly(client);
+            //ContentProviderClient.releaseQuietly(client);  func is hide, use our
+            releaseQuietly(client);
         }
     }
 
@@ -234,7 +237,7 @@ public class DocumentInfo implements Durable, Parcelable {
     }
 
     public boolean isGridTitlesHidden() {
-        return (flags & Document.FLAG_DIR_HIDE_GRID_TITLES) != 0;
+        return (flags & FLAG_DIR_HIDE_GRID_TITLES) != 0;
     }
 
     public static String getCursorString(Cursor cursor, String columnName) {
@@ -300,5 +303,14 @@ public class DocumentInfo implements Durable, Parcelable {
         if (rightDir && !leftDir) return 1;
 
         return sCollator.compare(lhs, rhs);
+    }
+
+    public static void releaseQuietly(ContentProviderClient client) {
+        if (client != null) {
+            try {
+                client.release();
+            } catch (Exception ignored) {
+            }
+        }
     }
 }

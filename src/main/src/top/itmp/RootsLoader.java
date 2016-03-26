@@ -19,7 +19,7 @@ package top.itmp;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 
-import com.android.documentsui.BaseActivity.State;
+import top.itmp.BaseActivity.State;
 import top.itmp.model.RootInfo;
 
 import java.util.Collection;

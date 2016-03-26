@@ -21,6 +21,8 @@ import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.widget.Toolbar;
 
+import top.itmp.documentsui.R;
+
 /**
  * ToolBar of Documents UI.
  */

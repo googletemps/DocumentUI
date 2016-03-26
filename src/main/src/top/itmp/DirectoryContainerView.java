@@ -37,7 +37,7 @@ public class DirectoryContainerView extends FrameLayout {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
-        final ArrayList<View> disappearing = mDisappearingChildren;
+        final ArrayList<View> disappearing = null; //mDisappearingChildren;
         if (mDisappearingFirst && disappearing != null) {
             for (int i = 0; i < disappearing.size(); i++) {
                 super.drawChild(canvas, disappearing.get(i), getDrawingTime());
@@ -48,8 +48,8 @@ public class DirectoryContainerView extends FrameLayout {
 
     @Override
     protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
-        if (mDisappearingFirst && mDisappearingChildren != null
-                && mDisappearingChildren.contains(child)) {
+        if (mDisappearingFirst){ //&& mDisappearingChildren != null
+//                && mDisappearingChildren.contains(child)) {
             return false;
         }
         return super.drawChild(canvas, child, drawingTime);

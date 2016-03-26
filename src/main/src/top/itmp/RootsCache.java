@@ -36,7 +36,8 @@ import android.provider.DocumentsContract;
 import android.provider.DocumentsContract.Root;
 import android.util.Log;
 
-import com.android.documentsui.BaseActivity.State;
+import top.itmp.BaseActivity.State;
+import top.itmp.documentsui.R;
 import top.itmp.model.RootInfo;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.annotations.VisibleForTesting;
@@ -267,7 +268,7 @@ public class RootsCache {
             Log.w(TAG, "Failed to load some roots from " + authority + ": " + e);
         } finally {
             IoUtils.closeQuietly(cursor);
-            ContentProviderClient.releaseQuietly(client);
+            //ContentProviderClient.releaseQuietly(client);
         }
         return roots;
     }
@@ -354,9 +355,9 @@ public class RootsCache {
         for (RootInfo root : roots) {
             final boolean supportsCreate = (root.flags & Root.FLAG_SUPPORTS_CREATE) != 0;
             final boolean supportsIsChild = (root.flags & Root.FLAG_SUPPORTS_IS_CHILD) != 0;
-            final boolean advanced = (root.flags & Root.FLAG_ADVANCED) != 0;
+            final boolean advanced = (root.flags ) != 0;
             final boolean localOnly = (root.flags & Root.FLAG_LOCAL_ONLY) != 0;
-            final boolean empty = (root.flags & Root.FLAG_EMPTY) != 0;
+            final boolean empty = (root.flags &  1 << 16) != 0;
 
             // Exclude read-only devices when creating
             if (state.action == State.ACTION_CREATE && !supportsCreate) continue;

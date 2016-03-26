@@ -58,6 +58,7 @@ import android.widget.TextView;
 
 import top.itmp.RecentsProvider.ResumeColumns;
 
+import top.itmp.documentsui.R;
 import top.itmp.model.DocumentInfo;
 import top.itmp.model.DocumentStack;
 import top.itmp.model.DurableUtils;
@@ -67,6 +68,12 @@ import com.google.common.collect.Maps;
 abstract class BaseActivity extends Activity {
 
     static final String EXTRA_STATE = "state";
+    public static final String
+            ACTION_DOCUMENT_ROOT_SETTINGS = "android.provider.action.DOCUMENT_ROOT_SETTINGS"; //DocumentsContract.ACTION_DOCUMENT_ROOT_SETTINGS
+
+    public static final String MIME_TYPE_ITEM = "vnd.android.document/root";
+    public static final String EXTRA_PACKAGE_NAME = "android.content.extra.PACKAGE_NAME";
+
 
     RootsCache mRoots;
     SearchManager mSearchManager;
@@ -222,9 +229,9 @@ abstract class BaseActivity extends Activity {
             return true;
         } else if (id == R.id.menu_settings) {
             final RootInfo root = getCurrentRoot();
-            final Intent intent = new Intent(DocumentsContract.ACTION_DOCUMENT_ROOT_SETTINGS);
+            final Intent intent = new Intent(ACTION_DOCUMENT_ROOT_SETTINGS);
             intent.setDataAndType(DocumentsContract.buildRootUri(root.authority, root.rootId),
-                    DocumentsContract.Root.MIME_TYPE_ITEM);
+                    MIME_TYPE_ITEM);
             startActivity(intent);
             return true;
         }
@@ -272,8 +279,8 @@ abstract class BaseActivity extends Activity {
         // System apps can set the calling package name using an extra.
         try {
             ApplicationInfo info = getPackageManager().getApplicationInfo(callingPackage, 0);
-            if (info.isSystemApp() || info.isUpdatedSystemApp()) {
-                final String extra = getIntent().getStringExtra(DocumentsContract.EXTRA_PACKAGE_NAME);
+            if (isSystemApp(info) || isUpdatedSystemApp(info)) {
+                final String extra = getIntent().getStringExtra(EXTRA_PACKAGE_NAME);
                 if (extra != null) {
                     callingPackage = extra;
                 }
@@ -385,7 +392,8 @@ abstract class BaseActivity extends Activity {
                 final State state = new State();
                 state.action = in.readInt();
                 state.userMode = in.readInt();
-                state.acceptMimes = in.readStringArray();
+                //state.acceptMimes = in.readStringArray();
+                in.readStringArray(state.acceptMimes);
                 state.userSortOrder = in.readInt();
                 state.allowMultiple = in.readInt() != 0;
                 state.showSize = in.readInt() != 0;
@@ -817,5 +825,12 @@ abstract class BaseActivity extends Activity {
         public void onActionViewCollapsed() {
             updateActionBar();
         }
+    }
+
+    public boolean isSystemApp(ApplicationInfo info) {
+        return (info.flags & info.FLAG_SYSTEM) != 0;
+    }
+    public boolean isUpdatedSystemApp(ApplicationInfo info) {
+        return (info.flags & info.FLAG_UPDATED_SYSTEM_APP) != 0;
     }
 }

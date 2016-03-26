@@ -16,9 +16,9 @@
 
 package top.itmp;
 
-import static com.android.documentsui.BaseActivity.State.SORT_ORDER_DISPLAY_NAME;
-import static com.android.documentsui.BaseActivity.State.SORT_ORDER_LAST_MODIFIED;
-import static com.android.documentsui.BaseActivity.State.SORT_ORDER_SIZE;
+import static top.itmp.BaseActivity.State.SORT_ORDER_DISPLAY_NAME;
+import static top.itmp.BaseActivity.State.SORT_ORDER_LAST_MODIFIED;
+import static top.itmp.BaseActivity.State.SORT_ORDER_SIZE;
 import static top.itmp.model.DocumentInfo.getCursorLong;
 import static top.itmp.model.DocumentInfo.getCursorString;
 

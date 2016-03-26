@@ -31,6 +31,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import top.itmp.documentsui.R;
 import top.itmp.model.DocumentInfo;
 
 /**

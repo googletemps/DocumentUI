@@ -22,6 +22,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.content.ContentProvider;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -38,6 +39,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import top.itmp.documentsui.R;
 import top.itmp.model.DocumentInfo;
 
 /**
@@ -111,13 +113,13 @@ public class CreateDirectoryFragment extends DialogFragment {
                 client = DocumentsApplication.acquireUnstableProviderOrThrow(
                         resolver, mCwd.derivedUri.getAuthority());
                 final Uri childUri = DocumentsContract.createDocument(
-                        client, mCwd.derivedUri, Document.MIME_TYPE_DIR, mDisplayName);
+                        resolver, mCwd.derivedUri, Document.MIME_TYPE_DIR, mDisplayName);
                 return DocumentInfo.fromUri(resolver, childUri);
             } catch (Exception e) {
                 Log.w(TAG, "Failed to create directory", e);
                 return null;
             } finally {
-                ContentProviderClient.releaseQuietly(client);
+                //ContentProviderClient.releaseQuietly(client);
             }
         }
 

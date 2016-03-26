@@ -40,10 +40,12 @@ android {
                 res.srcDirs "src/${dir}/res"
             }
         }
+        androidTest.setRoot('tests')
+        androidTest.java.srcDirs = ['tests/src']
     }
-
 }
 dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:support-v4:23.2.1'
     compile 'com.google.guava:guava:19.0'
     compile 'com.ibm.icu:icu4j:57.1'

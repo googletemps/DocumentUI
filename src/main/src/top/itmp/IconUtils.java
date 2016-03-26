@@ -27,6 +27,8 @@ import com.google.android.collect.Maps;
 
 import java.util.HashMap;
 
+import top.itmp.documentsui.R;
+
 public class IconUtils {
 
     private static HashMap<String, Integer> sMimeIcons = Maps.newHashMap();

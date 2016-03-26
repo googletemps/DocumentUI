@@ -41,6 +41,7 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import top.itmp.documentsui.R;
 import top.itmp.model.DocumentInfo;
 import top.itmp.model.DocumentStack;
 
@@ -155,8 +156,8 @@ public class CopyService extends IntentService {
             // Catch-all to prevent any copy errors from wedging the app.
             Log.e(TAG, "Exceptions occurred during copying", e);
         } finally {
-            ContentProviderClient.releaseQuietly(mSrcClient);
-            ContentProviderClient.releaseQuietly(mDstClient);
+           // ContentProviderClient.releaseQuietly(mSrcClient);
+           // ContentProviderClient.releaseQuietly(mDstClient);
 
             wakeLock.release();
 
@@ -347,7 +348,7 @@ public class CopyService extends IntentService {
             mProgressBuilder.setContentInfo(percent);
             if (mRemainingTime > 0) {
                 mProgressBuilder.setContentText(getString(R.string.copy_remaining,
-                        DateUtils.formatDuration(mRemainingTime)));
+                        formatDuration(mRemainingTime)));
             } else {
                 mProgressBuilder.setContentText(null);
             }
@@ -356,6 +357,27 @@ public class CopyService extends IntentService {
         }
     }
 
+    public static final long SECOND_IN_MILLIS = 1000;
+    public static final long MINUTE_IN_MILLIS = SECOND_IN_MILLIS * 60;
+    public static final long HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60;
+    public static final long DAY_IN_MILLIS = HOUR_IN_MILLIS * 24;
+    public static final long WEEK_IN_MILLIS = DAY_IN_MILLIS * 7;
+    public static CharSequence formatDuration(long millis) {
+        final Resources res = Resources.getSystem();
+        if (millis >= HOUR_IN_MILLIS) {
+            final int hours = (int) ((millis + 1800000) / HOUR_IN_MILLIS);
+            return res.getQuantityString(
+                    R.plurals.duration_hours, hours, hours);
+        } else if (millis >= MINUTE_IN_MILLIS) {
+            final int minutes = (int) ((millis + 30000) / MINUTE_IN_MILLIS);
+            return res.getQuantityString(
+                    R.plurals.duration_minutes, minutes, minutes);
+        } else {
+            final int seconds = (int) ((millis + 500) / SECOND_IN_MILLIS);
+            return res.getQuantityString(
+                    R.plurals.duration_seconds, seconds, seconds);
+        }
+    }
     /**
      * Generates an estimate of the remaining time in the copy.
      *
@@ -388,7 +410,7 @@ public class CopyService extends IntentService {
      * @throws RemoteException
      */
     private void copy(DocumentInfo srcInfo, DocumentInfo dstDirInfo) throws RemoteException {
-        final Uri dstUri = DocumentsContract.createDocument(mDstClient, dstDirInfo.derivedUri,
+        final Uri dstUri = DocumentsContract.createDocument(getContentResolver(), dstDirInfo.derivedUri,
                 srcInfo.mimeType, srcInfo.displayName);
         if (dstUri == null) {
             // If this is a directory, the entire subdir will not be copied over.
@@ -429,7 +451,7 @@ public class CopyService extends IntentService {
             cursor = mSrcClient.query(queryUri, queryColumns, null, null, null);
             while (cursor.moveToNext()) {
                 final String childMimeType = getCursorString(cursor, Document.COLUMN_MIME_TYPE);
-                final Uri dstUri = DocumentsContract.createDocument(mDstClient, dstDirUri,
+                final Uri dstUri = DocumentsContract.createDocument(getContentResolver(), dstDirUri,
                         childMimeType, getCursorString(cursor, Document.COLUMN_DISPLAY_NAME));
                 final Uri childUri = DocumentsContract.buildDocumentUri(srcDirUri.getAuthority(),
                         getCursorString(cursor, Document.COLUMN_DOCUMENT_ID));
@@ -501,14 +523,9 @@ public class CopyService extends IntentService {
         if (copyError != null || mIsCancelled) {
             // Clean up half-copied files.
             canceller.cancel();
-            try {
-                DocumentsContract.deleteDocument(mDstClient, dstUri);
-            } catch (RemoteException e) {
-                Log.w(TAG, "Failed to clean up: " + srcUri, e);
-                // RemoteExceptions usually signal that the connection is dead, so there's no point
-                // attempting to continue. Propagate the exception up so the copy job is cancelled.
-                throw e;
-            }
+
+                DocumentsContract.deleteDocument(getContentResolver(), dstUri);
+
         }
     }
 }

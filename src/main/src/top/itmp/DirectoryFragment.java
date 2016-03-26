@@ -89,6 +89,7 @@ import top.itmp.BaseActivity.State;
 import top.itmp.ProviderExecutor.Preemptable;
 import top.itmp.RecentsProvider.StateColumns;
 
+import top.itmp.documentsui.R;
 import top.itmp.model.DocumentInfo;
 import top.itmp.model.DocumentStack;
 import top.itmp.model.RootInfo;
@@ -284,7 +285,7 @@ public class DirectoryFragment extends Fragment {
                         contentsUri = DocumentsContract.buildChildDocumentsUri(
                                 doc.authority, doc.documentId);
                         if (state.action == ACTION_MANAGE) {
-                            contentsUri = DocumentsContract.setManageMode(contentsUri);
+                            contentsUri = contentsUri.buildUpon().appendQueryParameter("manage", "true").build();
                         }
                         return new DirectoryLoader(
                                 context, mType, root, doc, contentsUri, state.userSortOrder);
@@ -292,7 +293,7 @@ public class DirectoryFragment extends Fragment {
                         contentsUri = DocumentsContract.buildSearchDocumentsUri(
                                 root.authority, root.rootId, query);
                         if (state.action == ACTION_MANAGE) {
-                            contentsUri = DocumentsContract.setManageMode(contentsUri);
+                            contentsUri = contentsUri.buildUpon().appendQueryParameter("manage", "true").build();
                         }
                         return new DirectoryLoader(
                                 context, mType, root, doc, contentsUri, state.userSortOrder);
@@ -499,7 +500,7 @@ public class DirectoryFragment extends Fragment {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate(R.menu.mode_directory, menu);
-            mode.setTitle(TextUtils.formatSelectedCount(mCurrentView.getCheckedItemCount()));
+            mode.setTitle(Resources.getSystem().getQuantityString(R.plurals.selected_count, mCurrentView.getCheckedItemCount(), mCurrentView.getCheckedItemCount()));
             return true;
         }
 
@@ -609,7 +610,7 @@ public class DirectoryFragment extends Fragment {
                 }
             }
 
-            mode.setTitle(TextUtils.formatSelectedCount(mCurrentView.getCheckedItemCount()));
+            mode.setTitle(Resources.getSystem().getQuantityString(R.plurals.selected_count, mCurrentView.getCheckedItemCount(),mCurrentView.getCheckedItemCount()));
         }
     };
 
@@ -686,12 +687,12 @@ public class DirectoryFragment extends Fragment {
             try {
                 client = DocumentsApplication.acquireUnstableProviderOrThrow(
                         resolver, doc.derivedUri.getAuthority());
-                DocumentsContract.deleteDocument(client, doc.derivedUri);
+                DocumentsContract.deleteDocument(resolver, doc.derivedUri);
             } catch (Exception e) {
                 Log.w(TAG, "Failed to delete " + doc);
                 hadTrouble = true;
             } finally {
-                ContentProviderClient.releaseQuietly(client);
+                //ContentProviderClient.releaseQuietly(client);
             }
         }
 
@@ -1103,12 +1104,14 @@ public class DirectoryFragment extends Fragment {
         private final Point mThumbSize;
         private final float mTargetAlpha;
         private final CancellationSignal mSignal;
+        private Context context = null;
 
         public ThumbnailAsyncTask(Uri uri, ImageView iconMime, ImageView iconThumb, Point thumbSize,
                 float targetAlpha) {
             mUri = uri;
             mIconMime = iconMime;
             mIconThumb = iconThumb;
+            context = mIconThumb.getContext();
             mThumbSize = thumbSize;
             mTargetAlpha = targetAlpha;
             mSignal = new CancellationSignal();
@@ -1124,7 +1127,7 @@ public class DirectoryFragment extends Fragment {
         protected Bitmap doInBackground(Uri... params) {
             if (isCancelled()) return null;
 
-            final Context context = mIconThumb.getContext();
+
             final ContentResolver resolver = context.getContentResolver();
 
             ContentProviderClient client = null;
@@ -1132,7 +1135,7 @@ public class DirectoryFragment extends Fragment {
             try {
                 client = DocumentsApplication.acquireUnstableProviderOrThrow(
                         resolver, mUri.getAuthority());
-                result = DocumentsContract.getDocumentThumbnail(client, mUri, mThumbSize, mSignal);
+                result = DocumentsContract.getDocumentThumbnail(resolver, mUri, mThumbSize, mSignal);
                 if (result != null) {
                     final ThumbnailCache thumbs = DocumentsApplication.getThumbnailsCache(
                             context, mThumbSize);
@@ -1143,7 +1146,7 @@ public class DirectoryFragment extends Fragment {
                     Log.w(TAG, "Failed to load thumbnail for " + mUri + ": " + e);
                 }
             } finally {
-                ContentProviderClient.releaseQuietly(client);
+               // ContentProviderClient.releaseQuietly(client);
             }
             return result;
         }
